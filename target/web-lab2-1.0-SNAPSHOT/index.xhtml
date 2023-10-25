@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+  <meta charset="UTF-8" />
+  <title>Лабораторная работа #3</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://unpkg.com/cookielib/src/cookie.min.js"></script>
+  <link type="image/x-icon" href="icons/logo.ico" rel="shortcut icon" />
+  <link type="Image/x-icon" href="icons/logo.ico" rel="icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+</h:head>
+
+<h:body>
+<div id="modalWindowBack" class="hiddenModalBack">
+  <div class="modalWindow closedModalWindow" id="internalErrorWindow">
+    <div class="closeButton" onClick="closeModalWindow('internalErrorWindow')"></div>
+    <div style="display: flex; flex-direction: row; align-items: center;">
+      <p class="subtitle">Внутренняя ошибка</p>
+    </div>
+    <p class="errorMessage">Произошла ошибка, пожалуйста, повторите попытку.</p>
+  </div>
+  <div class="modalWindow closedModalWindow" id="settingsWindow">
+    <div class="closeButton" onclick="closeModalWindow('settingsWindow')"></div>
+    <div style="display: flex; flex-direction: row; align-items: center;">
+      <p class="subtitle">Параметры</p>
+    </div>
+    <div class="switchRow">
+      <label class="switch">
+        <input type="checkbox" id="roundXSwitch" />
+        <span class="slider round"></span>
+      </label>
+      <p>Притягивать значение X с шагом 0.5</p>
+    </div>
+    <div class="switchRow">
+      <label class="switch">
+        <input type="checkbox" id="autoSendSwitch" />
+        <span class="slider round"></span>
+      </label>
+      <p>Автоматическая отправка данных точки</p>
+    </div>
+    <div class="switchRow">
+      <label class="switch">
+        <input type="checkbox" id="clockSwitch" />
+        <span class="slider round"></span>
+      </label>
+      <p>Обновлять часы каждые 7 секунд</p>
+    </div>
+  </div>
+</div>
+<div id="header" class="header">
+  <div id="logo"></div>
+  <div class="headerInfo">
+    <a href="https://my.itmo.ru/persons/372796">
+      <p>Башаримов Евгений Александрович</p>
+    </a>
+    <p>P3206</p>
+    <p>Вариант #1715</p>
+    <div class="icon" onclick='showModalWindow("settings", "");'
+         style="background-image: url(icons/settings.png); margin-left: 20px; opacity: .8; cursor: pointer;">
+    </div>
+  </div>
+</div>
+<div class="contentWrapper">
+  <div class="labelWithIcon">
+    <div class="icon" style="background-image: url(icons/apps.png)"></div>
+    <div class="verticalBox">
+      <h1>Список инструментов</h1>
+      <p>Выберите один из предложенных сервисов</p>
+    </div>
+  </div>
+  <div class="simpleRow">
+    <a href="main.xhtml">
+      <div class="button verticalButton" style="margin-right: 20px;">
+        <div class="icon" style="background-image: url(icons/areas.png);"></div>
+        <p>Проверка попадания точки</p>
+      </div>
+    </a>
+    <div class="button verticalButton inactiveButton" style="margin-right: 20px;">
+      <div class="icon" style="background-image: url(icons/areas.png);"></div>
+      <p>В разработке</p>
+    </div>
+    <div class="button verticalButton inactiveButton" style="margin-right: 20px;">
+      <div class="icon" style="background-image: url(icons/areas.png);"></div>
+      <p>В разработке</p>
+    </div>
+  </div>
+  <div id="widgetArea"></div>
+  <div class="widgetBox" id="calendarWidget">
+    <div class="dateBox">
+      <div id="dateRow">
+        <p id="weekday"></p>
+        <p id="month"></p>
+      </div>
+      <div id="dayBox">
+        <p id="date"></p>
+      </div>
+    </div>
+  </div>
+  <div class="widgetBox" id="clockWidget">
+    <div class="clock">
+      <div class="clockDot"></div>
+      <div>
+        <div class="hour-hand"></div>
+        <div class="minute-hand"></div>
+        <div class="second-hand"></div>
+      </div>
+      <div>
+        <span class="clockDigit" id="digit3">3</span>
+        <span class="clockDigit" id="digit6">6</span>
+        <span class="clockDigit" id="digit9">9</span>
+        <span class="clockDigit" id="digit12">12</span>
+      </div>
+      <div class="linesBox">
+        <div class="diallines"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script type="text/javascript" src="js/windows.js" />
+  <script src="js/clock.js"></script>
+</h:body>
+
+</html>
