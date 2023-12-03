@@ -8,8 +8,8 @@
 
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://127.0.0.1:5432/studs"/>
-            <property name="jakarta.persistence.jdbc.user" value="s372796"/>
-            <property name="jakarta.persistence.jdbc.password" value="88mshzLHxcleudyI"/>
+            <property name="jakarta.persistence.jdbc.user" value=""/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
         </properties>
 
