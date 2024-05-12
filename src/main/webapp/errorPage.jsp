@@ -20,7 +20,6 @@
 </head>
 <body>
     <div class="screenCentered">
-        <div class="icon" id="errorIcon" style="background-image: url(icons/errorDuck.png)"></div>
         <p class="subtitle">Ошибка <%= statusCode %></p>
         <p><%= errorMessage %></p><br>
 

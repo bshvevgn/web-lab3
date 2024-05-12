@@ -94,9 +94,6 @@ function formSubmit(submit){
     if(submit) {
         let submitButton = document.getElementById("mainForm\:submit-button");
         submitButton.click();
-        console.log("submitted");
-    } else {
-        console.log("not submitted");
     }
 }
 
@@ -105,16 +102,13 @@ function checkInputs(){
     let yInp = document.getElementById(yInputID);
     let rInp = document.getElementById(rInputID);
 
-    if (xInp.value == "") {
-        showModalWindow("incorrectValue", "Пожалуйста, выберите значение для X.");
-        return false;
-    } else if (parseFloat(yInp.value) > 3 || parseFloat(yInp.value) < -3) {
-        showModalWindow("incorrectValue", "Пожалуйста, введите значение для Y от -3 до 3.");
+    if (parseFloat(yInp.value) > 5 || parseFloat(yInp.value) < -5) {
+        showModalWindow("incorrectValue", "Пожалуйста, введите значение для Y от -5 до 5.");
         return false;
     } else if (rInp == "") {
         showModalWindow("incorrectValue", "Пожалуйста, введите значение для R.");
         return false;
-    } else if (!isValid(xInp.value) || !isValid(yInp.value) || (!isValid(rInp.value) && !isPositive(rInp.value))) {
+    } else if (!isValid(yInp.value) || (!isValid(rInp.value) && !isPositive(rInp.value))) {
         showModalWindow("incorrectValue", "Проверьте введённые данные.");
         return false;
     } else {
@@ -149,6 +143,8 @@ function clearTable(url) {
         }
 });
 }
+
+
 
 
 function handleFormSubmit(button) {
@@ -206,7 +202,7 @@ xInput.addEventListener('input', function () {
     } else if (isNaN(+(value))) {
         xInput.classList.add('invalid');
         xInput.classList.remove('valid');
-    } else if (+(value) >= -3 && +(value) <= 3) {
+    } else if (+(value) >= -2 && +(value) <= 1) {
         xInput.classList.add('valid');
         xInput.classList.remove('invalid');
     } else {
@@ -226,7 +222,7 @@ yInput.addEventListener('input', function () {
     } else if (isNaN(+(value))) {
         yInput.classList.add('invalid');
         yInput.classList.remove('valid');
-    } else if (+(value) >= -5 && +(value) <= 3) {
+    } else if (+(value) >= -5 && +(value) <= 5) {
         yInput.classList.add('valid');
         yInput.classList.remove('invalid');
     } else {
@@ -241,13 +237,11 @@ const rInputDublicate = document.querySelector('#rDublicate');
 
 rInput.addEventListener('input', function () {
     rInputDublicate.value = rInput.value;
-    console.log("changing r->rD");
     removePoint();
 });
 
 rInputDublicate.addEventListener('input', function () {
     rInput.value = rInputDublicate.value;
-    console.log("changing rD->r");
     removePoint();
 });
 
@@ -267,7 +261,7 @@ rInputs.forEach(r => {r.addEventListener('input', function () {
         rInputDublicate.classList.remove('valid');
         hidePoints();
         editHint("Значение R может состоять только из цифр и точки", areasHint);
-    } else if (+(value) >= 1 && +(value) <= 4) {
+    } else if (+(value) >= 2 && +(value) <= 5) {
         rInput.classList.add('valid');
         rInput.classList.remove('invalid');
         rInputDublicate.classList.add('valid');
@@ -280,7 +274,7 @@ rInputs.forEach(r => {r.addEventListener('input', function () {
         rInputDublicate.classList.add('invalid');
         rInputDublicate.classList.remove('valid');
         hidePoints();
-        editHint("Значение R должно быть равно от 1 до 4", areasHint);
+        editHint("Значение R должно быть равно от 2 до 5", areasHint);
     }
 });
 });
@@ -299,14 +293,10 @@ coordinatesBox.addEventListener('click', function(event) {
         setTimeout(() => coordinatesBox.removeChild(previousDot), 200);
     }
 
-    radius = +(rInput.value);
+    let radius = +(rInput.value);
 
     if(radius == 0 || rInput.classList.contains('invalid')){
         editHint("Проверьте введённое значение R", areasHint);
-
-        rInputDublicate.parentElement.classList.add("shake");
-        setTimeout(() => rInputDublicate.parentElement.classList.remove("shake"), 400);
-
         return;
     }
 
@@ -341,8 +331,6 @@ coordinatesBox.addEventListener('click', function(event) {
 
     let scale = 300 / 240;
 
-    //((-(dotY - centerY) * radius) / centerY) * scale;
-
     let finalX = ((pointX * radius) / centerX) * scale;
     let finalY = ((pointY * radius) / centerY) * scale;
 
@@ -372,20 +360,16 @@ coordinatesBox.addEventListener('click', function(event) {
         popup.classList.add('hiddenPopup');
     }, 2000);
 
-
-
-    //console.log("finalX: " + finalX + " finalY: " + finalY);
-    //console.log("x: " + pointX + " y: " + pointY + " rectX: " + centerX + " rectY: " + centerY);
 });
 
 function nearest(number) {
-    if (number > 3) {
-        editHint("Значение X не может быть больше 3", areasHint);
-        return 3;
+    if (number > 2) {
+        editHint("Значение X не может быть больше 2", areasHint);
+        return 1;
     }
-    if (number < -3) {
-        editHint("Значение X не может быть меньше -3", areasHint);
-        return -3;
+    if (number < -2) {
+        editHint("Значение X не может быть меньше -2", areasHint);
+        return -2;
     }
     if (roundX) {
         return Math.round(number * 2) / 2;
@@ -395,13 +379,13 @@ function nearest(number) {
 }
 
 function checkY(number){
-    if (number > 3){
-        editHint("Значение Y не может быть больше 3", areasHint)
-        return 3;
+    if (number > 5){
+        editHint("Значение Y не может быть больше 5", areasHint)
+        return 5;
     }
-    if (number < -3){
-        editHint("Значение Y не может быть меньше -3", areasHint)
-        return -3;
+    if (number < -5){
+        editHint("Значение Y не может быть меньше -5", areasHint)
+        return -5;
     }
     return number;
 }
@@ -427,7 +411,6 @@ function processTableRows() {
         const cells = rows[i].getElementsByTagName("td");
 
         if (cells.length >= 4) {
-            console.log('yeah');
             const x = parseFloat(cells[0].textContent);
             const y = parseFloat(cells[1].textContent);
             const r = parseFloat(cells[2].textContent);

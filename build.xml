@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<project name="lab3"
+         default="build">
+    <property file="build.properties"/>
+
+    <path id="libs.path">
+        <fileset dir="src/main/lib" includes="**/*.jar"/>
+    </path>
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="src/main/lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+    <target name="init">
+        <mkdir dir="${target.classes}"/>
+        <mkdir dir="${target.tests}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac destdir="${target.classes}"
+               srcdir="${main.source}">
+            <classpath refid="libs.path"/>
+        </javac>
+        <javac destdir="${target.classes}"
+               srcdir="${test.source}">
+            <classpath refid="libs.path"/>
+        </javac>
+        <echo message="Successfully compiled main sources"/>
+    </target>
+
+    <target name="build" depends="compile">
+        <jar destfile="${distribution.jar}" basedir="${target.classes}" compress="false" index="true">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+        <echo message="Successfully built"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="${target}"/>
+        <delete dir="${distribution.dir}"/>
+        <delete dir="${doc.dir}"/>
+        <delete dir="${test.result.dir}"/>
+        <echo message="Cleaned target"/>
+    </target>
+
+    <target name="test" depends="build">
+        <mkdir dir="${test.result.dir}"/>
+        <junitlauncher printsummary="on" haltonfailure="yes">
+            <classpath refid="libs.path"/>
+            <classpath>
+                <pathelement location="${target.classes}"/>
+            </classpath>
+            <testclasses outputdir="${test.result.dir}">
+                <fileset dir="${target.classes}" includes="**/*Test.class"/>
+                <listener type="legacy-brief" sendSysOut="true"/>
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+            </testclasses>
+        </junitlauncher>
+        <echo message="Test completed"/>
+    </target>
+
+    <target name="javadoc" depends="build">
+
+    </target>
+
+    <target name="doc" depends="javadoc">
+        <jar destfile="${distribution.jar}" update="true">
+            <fileset dir="." includes="${doc.dir}/**"/>
+        </jar>
+
+        <signjar alias="web3"
+                 storepass="webWeb"
+                 keystore="${keystore}"
+                 sigalg="MD5withRSA"
+                 digestalg="SHA1">
+            <path>
+                <file file="${distribution.jar}"/>
+            </path>
+        </signjar>
+    </target>
+
+    <target name="generate_key">
+        <genkey alias="web3" storepass="webWeb" keystore="${keystore}"
+                keyalg="RSA"
+                dname="CN=Ant Group, OU=Jakarta Division, O=Apache.org, C=US"/>
+    </target>
+
+    <target name="report">
+        <trycatch>
+            <try>
+                <antcall target="test"/>
+                <tstamp>
+                    <format property="timestamp" pattern="MM dd yyyy hh:mm aa"/>
+                </tstamp>
+                <mkdir dir="${test.result.dir}/${timestamp}"/>
+                <move todir="${test.result.dir}/${timestamp}">
+                    <fileset dir="${test.result.dir}">
+                        <include name="*.xml"/>
+                    </fileset>
+                </move>
+
+                <exec executable="git">
+                    <arg line="add &quot;${test.result.dir}/${timestamp}/*.xml&quot;"/>
+                </exec>
+
+                <exec executable="git">
+                    <arg line="commit -m &quot;Generated test report on ${timestamp}&quot;"/>
+                </exec>
+
+            </try>
+            <catch>
+                <echo message="Something went wrong in test. Report isn't generated."/>
+            </catch>
+        </trycatch>
+    </target>
+
+</project>

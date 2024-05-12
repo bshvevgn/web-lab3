@@ -30,12 +30,7 @@ public class CheckAreaResultsBean implements Serializable {
 
     public CheckAreaResultsBean() {
         super();
-        results = new LinkedList<>();
-        try {
-            results = new LinkedList<>(DAOFactory.getInstance().getResultDAO().getResults());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        results = new LinkedList<>(DAOFactory.getInstance().getResultDAO().getResults());
     }
 
     @Named(value = "resultList")
@@ -62,9 +57,9 @@ public class CheckAreaResultsBean implements Serializable {
         currentResult.setResult(result);
         currentResult.setExecutedAt(LocalDateTime.now());
         currentResult.setExecTime(executionTime);
-        try {
+
             DAOFactory.getInstance().getResultDAO().addNewResult(currentResult);
-        } catch (SQLException ignored) {}
+
         results.addFirst(currentResult);
     }
 
@@ -79,7 +74,7 @@ public class CheckAreaResultsBean implements Serializable {
             DAOFactory.getInstance().getResultDAO().clearResults();
             ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
             ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
-        } catch (SQLException | IOException ignored) {}
+        } catch (IOException ignored) {}
     }
 
     @Override

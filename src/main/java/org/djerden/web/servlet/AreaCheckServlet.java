@@ -1,4 +1,4 @@
-package org.vedzevgn.web.servlet;
+package org.djerden.web.servlet;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;

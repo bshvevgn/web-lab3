@@ -114,39 +114,41 @@
 
 
     <target name="report">
-        <exec executable="git" failonerror="true">
-            <arg value="add"/>
-            <arg value="${test.result.dir}"/>
-        </exec>
         <trycatch>
             <try>
                 <antcall target="test"/>
+                <tstamp>
+                    <format property="timestamp" pattern="dd_M_yyyy_hh:mm_aa"/>
+                </tstamp>
+
+                <mkdir dir="${test.result.dir}/${timestamp}"/>
+                <move todir="${test.result.dir}/${timestamp}">
+                    <fileset dir="${test.result.dir}">
+                        <include name="*.xml"/>
+                    </fileset>
+                </move>
+
+                <exec executable="git">
+                    <arg line="add &quot;${test.result.dir}/${timestamp}/*.xml&quot;"/>
+                </exec>
+
+                <exec executable="git">
+                    <arg line="commit -m &quot;Generate test report ${timestamp}&quot;"/>
+                </exec>
+
+                <exec executable="git">
+                    <arg line="pull"/>
+                </exec>
+                <exec executable="git">
+                    <arg line="push"/>
+                </exec>
             </try>
             <catch>
                 <echo message="Tests went wrong, report isn't generated"/>
             </catch>
         </trycatch>
-        <tstamp>
-            <format property="timestamp" pattern="MMddyyyy_hhmmss"/>
-        </tstamp>
-        <mkdir dir="${test.result.dir}/${timestamp}"/>
-        <move todir="${test.result.dir}/${timestamp}">
-            <fileset dir="${test.result.dir}">
-                <include name="*.xml"/>
-            </fileset>
-        </move>
-        <exec executable="git" failonerror="true">
-            <arg value="add"/>
-            <arg value="${test.result.dir}/${timestamp}"/>
-        </exec>
-        <exec executable="git" failonerror="true">
-            <arg value="commit"/>
-            <arg value="-m"/>
-            <arg value="Generate test report ${timestamp}"/>
-        </exec>
-        <exec executable="git" failonerror="true">
-            <arg value="push"/>
-        </exec>
     </target>
+
+
 
 </project>

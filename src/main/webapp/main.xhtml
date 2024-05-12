@@ -63,15 +63,13 @@
       <div class="closeButton" onclick="closeModalWindow('areasWindow')"></div>
       <div style="display: flex; flex-direction: row; align-items: center;">
         <div class="verticalBox">
-          <p class="subtitle">Интерактивная проверка</p>
-          <p>Факт попадания точки проверяется по данному графику.</p>
+          <p class="subtitle">Проверка по кординатам</p>
           <div class="imageWrapper" id="coordinates" style="background-image: url(images/areas.png)"></div>
           <p class="hint" id="areasHint" style="margin-top: 10px; margin-bottom: 0px">Выберите на графике точку для проверки</p>
         </div>
       </div>
       <div class="buttonsPanel">
         <div class="button inactiveButton" id="interactiveSubmitButton" onclick="formSubmit(checkInputs()); closeModalWindow('areasWindow'); checkTable(); removeLastPoint()">
-          <div class="icon" style="background-image: url(icons/arrow.png);"></div>
           <p>Проверить</p>
         </div>
       </div>
@@ -87,9 +85,9 @@
     <div class="modalWindow closedModalWindow" id="clearTableWindow">
       <div class="closeButton" onclick="closeModalWindow('clearTableWindow')"></div>
       <div style="display: flex; flex-direction: row; align-items: center;">
-        <p class="subtitle">Очистить результаты?</p>
+        <p class="subtitle">Очистить результаты</p>
       </div>
-      <p>Вы действительно хотите очистить таблицу с результатами?</p>
+      <p>Действительно очистить таблицу?</p>
       <div class="buttonsPanel">
         <div class="button deleteButton" onclick='closeModalWindow("clearTableWindow"); checkTable()'>
           <p>Очистить</p>
@@ -109,12 +107,8 @@
   <div id="header" class="header">
     <a href="index.xhtml"><div id="logo"></div></a>
     <div class="headerInfo">
-      <a href="https://my.itmo.ru/persons/372796">
-        <p>Башаримов Евгений Александрович</p>
-      </a>
-      <p>P3206</p>
-      <p>Вариант #1715</p>
-      <div class="icon"  onclick='showModalWindow("settings", "");' style="background-image: url(icons/settings.png); margin-left: 20px; opacity: .8; cursor: pointer;"></div>
+        <p>Горло Евгений (P3218)</p>
+<!--      <div class="icon"  onclick='showModalWindow("settings", "");' style="background-image: url(icons/settings.png); margin-left: 20px; opacity: .8; cursor: pointer;"></div>-->
     </div>
   </div>
   <div class="contentWrapper">
@@ -123,46 +117,54 @@
         <div class="centered" style="margin-bottom: 20px;">
           <div class="button" style="margin-right: 20px;" id="areasWindowButton"
                onclick='processTableRows(); showModalWindow("areas", "")'>
-            <div class="icon" style="background-image: url(icons/areas.png);"></div>
             <p>Интерактивная проверка</p>
-          </div>
-          <div class="verticalBox">
-            <h1 style="margin: 0px;">Проверка точки</h1>
-            <p>Введите данные для проверки</p>
           </div>
         </div>
         <div class="verticalBox">
           <p class="label">Координата X</p>
-          <p class="label hint">Выберите значение при помощи слайдера</p>
+          <p class="label hint">Выберите значение из списка</p>
         </div>
-        <div class="sliderRow">
-          <p:inputText id="x" name="x" class="sliderValue" value="#{xBean.value}" placeholder="1.5" />
-          <p:slider for="x" id="xSlider" name="xSlider" minValue="-3" maxValue="3" step="0.5" style="width: 200px;">
-          </p:slider>
+        <div class="inputWrapper">
+          <h:selectOneMenu id="xDub" name="xDub" onchange="updateXDublicate(this.value)">
+            <f:selectItem itemValue="-2" itemLabel="-2" />
+            <f:selectItem itemValue="-1.5" itemLabel="-1.5" />
+            <f:selectItem itemValue="-1" itemLabel="-1" />
+            <f:selectItem itemValue="-0.5" itemLabel="-0.5" />
+            <f:selectItem itemValue="0" itemLabel="0" />
+            <f:selectItem itemValue="0.5" itemLabel="0.5" />
+            <f:selectItem itemValue="1" itemLabel="1" />
+            <f:selectItem itemValue="1.5" itemLabel="1.5" />
+            <f:selectItem itemValue="2" itemLabel="2" />
+          </h:selectOneMenu>
         </div>
+        <h:inputHidden value="#{xBean.value}" id="x" name="x"/>
+        <script>
+          function updateXDublicate(selectedValue) {
+            document.getElementById('mainForm\:x').value = selectedValue;
+          }
+        </script>
         <br />
         <div class="verticalBox">
           <p class="label">Координата Y</p>
-          <p class="label hint">Введите значение от -5 до 3</p>
+          <p class="label hint">Введите значение от -5 до 5</p>
         </div>
         <div class="inputWrapper">
           <h:inputText class="textInput" id="y" name="y" value="#{yBean.value}" validator="#{yBean.validateSelectY}">
-            <f:validateLongRange minimum="-5" maximum="3" />
+            <f:validateLongRange minimum="-5" maximum="5" />
           </h:inputText>
         </div>
         <br />
         <div class="verticalBox">
           <p class="label">Значение R</p>
-          <p class="label hint">Введите значение от 1 до 4</p>
+          <p class="label hint">Выберите значение при помощи слайдера</p>
         </div>
-        <div class="inputWrapper">
-          <h:inputText class="textInput" id="r" name="r" value="#{rBean.value}" validator="#{rBean.validateSelectR}">
-            <f:validateLongRange minimum="1" maximum="4" />
-          </h:inputText>
+        <div class="sliderRow">
+          <p:inputText id="r" name="r" class="sliderValue" value="#{rBean.value}" placeholder="2.0" />
+          <p:slider for="r" id="rSlider" name="xSlider" minValue="2" maxValue="5" step="0.25" style="width: 200px;">
+          </p:slider>
         </div>
         <br />
         <div class="button" onclick="checkTable()">
-          <div class="icon" style="background-image: url(icons/arrow.png);"></div>
           <p>Проверить</p>
           <h:commandButton id="submit-button" value="" onclick="checkInputs(); checkTable()">
             <f:ajax execute="@form" listener="#{checkAreaResultsBean.newResult(xBean.value,
@@ -207,13 +209,10 @@
 
       </div>
       <div class="button inactiveButton" id="clearButton" onclick='showModalWindow("clearTable", "")'>
-        <div class="icon" style="background-image: url(icons/trash.png);"></div>
         <p>Очистить результаты</p>
       </div>
     </div>
-    <!--<div class="imageWrapper" style="background-image: url(images/areas.png);"></div>-->
     <div id="timeBox">
-      <div class="icon" style="background-image: url(icons/clock.png);"></div>
       <p id="currentTime"></p>
     </div>
 

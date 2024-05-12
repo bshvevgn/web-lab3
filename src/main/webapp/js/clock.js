@@ -30,14 +30,5 @@ function clock() {
   sEl.style.transform = "rotate(" + sDeg + "deg)";
 }
 
-function smoothClock() {
-  var d = new Date();
-  var s = d.getSeconds();
-  var sDeg = s * 6;
-  var sEl = document.querySelector('.second-hand');
-  
-  sEl.style.transform = "rotate(" + sDeg + "deg)";
-}
-
-setInterval(smoothClock, 17000); // интервал по заданию
-setInterval(clock, 100);
+clock();
+setInterval(clock, 17000); // интервал по заданию

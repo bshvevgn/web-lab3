@@ -4,15 +4,32 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
-        <properties>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://127.0.0.1:5432/studs"/>
-            <property name="jakarta.persistence.jdbc.user" value="s372796"/>
-            <property name="jakarta.persistence.jdbc.password" value="88mshzLHxcleudyI"/>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-        </properties>
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
         <class>model.CheckAreaBean</class>
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost/web"/>
+            <property name="jakarta.persistence.jdbc.user" value="vedzevgn"/>
+            <property name="jakarta.persistence.jdbc.password" value="18381838"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.PostgreSQLPlatform"/>
+            <property name="eclipselink.ddl-generation" value="none"/>
+        </properties>
+
+<!--        <properties>-->
+<!--            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://127.0.0.1:5432/studs"/>-->
+<!--            <property name="jakarta.persistence.jdbc.user" value="s372796"/>-->
+<!--            <property name="jakarta.persistence.jdbc.password" value="88mshzLHxcleudyI"/>-->
+<!--            <property name="eclipselink.logging.level" value="FINE"/>-->
+<!--            <property name="eclipselink.logging.parameters" value="true"/>-->
+<!--            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.PostgreSQLPlatform"/>-->
+<!--            <property name="eclipselink.ddl-generation" value="none"/>-->
+<!--        </properties>-->
+
+
+<!--        <class>model.CheckAreaBean</class>-->
     </persistence-unit>
 </persistence>
+
