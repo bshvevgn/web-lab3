@@ -32,4 +32,3 @@
 <!--        <class>model.CheckAreaBean</class>-->
     </persistence-unit>
 </persistence>
-
