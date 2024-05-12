@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<project name="web3-290923-1800">
+    <property file="build.properties"/>
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="src/main/lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+    <path id="classpath.source">
+        <fileset dir="src/main/lib" includes="**/*.jar"/>
+    </path>
+    <path id="classpath.testSource">
+        <fileset dir="src/test/lib" includes="**/*.jar"/>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${target.classes}"/>
+        <javac destdir="${target.classes}"
+               includeantruntime="false"
+               srcdir="${main.source}"
+               debug="on">
+            <classpath refid="classpath.source"/>
+        </javac>
+    </target>
+
+    <target name="compileTest">
+        <mkdir dir="${target.tests}"/>
+        <javac destdir="${target.tests}"
+               includeantruntime="false"
+               srcdir="${test.source}"
+               debug="on">
+            <classpath refid="classpath.testSource"/>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile">
+        <jar destfile="${dist.jar}" basedir="${target.classes}"
+             compress="false" index="true">
+            <manifest>
+                <attribute name="Main-Class"
+                           value="io.github.web32909231800.Main"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="clean">
+        <delete dir="${target}"/>
+    </target>
+
+    <target name="cleanAll" depends="clean">
+        <delete dir="${target.team}"/>
+        <delete dir="${dist.dir}"/>
+        <delete dir="${doc.dir}"/>
+    </target>
+
+    <target name="test" depends="compileTest">
+        <mkdir dir="${test.result.dir}"/>
+        <junitlauncher printsummary="on" haltonfailure="yes">
+            <classpath refid="classpath.testSource"/>
+            <classpath>
+                <pathelement location="${target.tests}"/>
+            </classpath>
+            <testclasses outputdir="${test.result.dir}">
+                <fileset dir="${target.tests}">
+                    <include name="**/*.class"/>
+                </fileset>
+                <listener type="legacy-xml" sendSysOut="true"
+                          sendSysErr="true"/>
+            </testclasses>
+        </junitlauncher>
+        <echo message="Test completed"/>
+    </target>
+
+    <target name="generate_key">
+        <genkey alias="web3" storepass="webWeb" keystore="${keystore}"
+                keyalg="RSA"
+                dname="CN=Ant Group, OU=Jakarta Division, O=Apache.org,
+                C=US"/>
+    </target>
+
+    <target name="doc" depends="build">
+        <delete dir="${doc.dir}"/>
+        <mkdir dir="${doc.dir}"/>
+        <javadoc destdir="${doc.dir}">
+            <classpath refid="classpath.source"/>
+            <classpath refid="classpath.testSource"/>
+            <fileset dir="${source.dir}" includes="**/*.java"/>
+        </javadoc>
+        <jar destfile="${dist.jar}" update="true">
+            <fileset dir="." includes="${doc.dir}/**"/>
+        </jar>
+        <exec executable="git" failonerror="true">
+            <arg value="commit"/>
+            <arg value="-m"/>
+            <arg value="Committing documentation"/>
+            <arg value="${doc.dir}"/>
+        </exec>
+        <exec executable="git" failonerror="true">
+            <arg value="push"/>
+        </exec>
+        <exec executable="jarsigner" failonerror="true">
+            <arg value="-keystore"/>
+            <arg value="${keystore}"/>
+            <arg value="-storepass"/>
+            <arg value="webWeb"/>
+            <arg value="-sigalg"/>
+            <arg value="MD5withRSA"/>
+            <arg value="-digestalg"/>
+            <arg value="SHA1"/>
+            <arg value="${dist.jar}"/>
+            <arg value="web3"/>
+        </exec>
+    </target>
+
+
+    <target name="report">
+        <exec executable="git" failonerror="true">
+            <arg value="add"/>
+            <arg value="${test.result.dir}"/>
+        </exec>
+        <trycatch>
+            <try>
+                <antcall target="test"/>
+            </try>
+            <catch>
+                <echo message="Tests went wrong, report isn't generated"/>
+            </catch>
+        </trycatch>
+        <tstamp>
+            <format property="timestamp" pattern="MMddyyyy_hhmmss"/>
+        </tstamp>
+        <mkdir dir="${test.result.dir}/${timestamp}"/>
+        <move todir="${test.result.dir}/${timestamp}">
+            <fileset dir="${test.result.dir}">
+                <include name="*.xml"/>
+            </fileset>
+        </move>
+        <exec executable="git" failonerror="true">
+            <arg value="add"/>
+            <arg value="${test.result.dir}/${timestamp}"/>
+        </exec>
+        <exec executable="git" failonerror="true">
+            <arg value="commit"/>
+            <arg value="-m"/>
+            <arg value="Generate test report ${timestamp}"/>
+        </exec>
+        <exec executable="git" failonerror="true">
+            <arg value="push"/>
+        </exec>
+    </target>
+
+</project>
