@@ -63,6 +63,10 @@ public class CheckAreaResultsBean implements Serializable {
         results.addFirst(currentResult);
     }
 
+    public boolean calculateResult(double x, double y, double r){
+        return AreaResultChecker.getResult(x, y, r);
+    }
+
     public void addPoint(double x, double y, double r, boolean hit) {
         System.out.println("TEST: " + x + ", " + y + ", " + r + ", " + hit);
         PrimeFaces.current().executeScript("addPoint(" + x + ", " + y + ", " + r + ", " + hit + ")");
